@@ -1,0 +1,13 @@
+{
+  "name": "trust-sg-backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "twilio": "^3.73.0"
+  },
+  "devDependencies": {}
+}
