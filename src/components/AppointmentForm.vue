@@ -106,7 +106,7 @@
                     icon: 'cloud_done',
                     message: 'Submitted'
                 });
-                twilioStore.sendAppointmentMessage();
+                twilioStore.sendAppointmentMessage('SAMPLE_TO', appointmentAgenda.value);
                 // if (accept.value !== true) {
                 //     $q.notify({
                 //         color: 'red-5',

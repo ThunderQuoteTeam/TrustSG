@@ -8,7 +8,9 @@ const useTwilioStore = defineStore('twilio', {
     },
     actions: {
         async sendAppointmentMessage(to, body) {
-            return this.axiosInstance.get('/sendmessage');
+            return this.axiosInstance.post('/sendmessage', {
+                messageBody: body
+            });
         }
     }
 })

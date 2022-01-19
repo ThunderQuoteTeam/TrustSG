@@ -5,9 +5,9 @@ const client = require('twilio')(accountSid, authToken);
 
 module.exports = async function (context, req) {
     context.log('HTTP trigger for twilio');
-
+    const body = req.body.messageBody;
     client.messages.create({
-        body: 'hello there',
+        body,
         messagingServiceSid,
         to: '+6597664983'
     })
