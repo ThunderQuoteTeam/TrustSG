@@ -99,14 +99,19 @@
                 console.log(appointmentNumber.value);
             })
 
-            const onSubmit = () => {
+            const onSubmit = async () => {
                 $q.notify({
                     color: 'green-4',
                     textColor: 'white',
                     icon: 'cloud_done',
                     message: 'Submitted'
                 });
-                twilioStore.sendAppointmentMessage('SAMPLE_TO', appointmentAgenda.value);
+                try {
+                    let resp = await twilioStore.sendAppointmentMessage('SAMPLE_TO', appointmentAgenda.value);
+                } catch (err) {
+                    console.log({err});
+                }
+                
                 // if (accept.value !== true) {
                 //     $q.notify({
                 //         color: 'red-5',
