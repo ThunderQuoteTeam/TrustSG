@@ -1,10 +1,9 @@
 <template>
     <div class="q-pa-md" style="max-width: 400px">
-        <q-form
-        @submit="onSubmit"
-        @reset="onReset"
-        class="q-gutter-md"
-        >
+        <h5>Make An Appointment</h5>
+        <q-form @submit="onSubmit"
+                @reset="onReset"
+                class="q-gutter-md">
             <!-- <q-input
                 filled
                 v-model="name"
@@ -60,7 +59,7 @@
             <q-input v-model="appointmentAgenda" type="textarea" label="Agenda" filled/>
 
             <div>
-                <q-btn label="Submit" type="submit" color="primary"/>
+                <q-btn label="Submit" type="submit" color="primary" :loading="submitPending"/>
                 <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
             </div>
         </q-form>
@@ -97,12 +96,14 @@
             const appointmentAgenda = ref(DEFAULT_STATES.appointmentAgenda);
             const appointmentDate = ref(DEFAULT_STATES.appointmentDate); // form input will give date STRING
             const phoneError = ref(false);
+            const submitPending = ref(false);
 
             watch(appointmentNumber, () => {
                 console.log(appointmentNumber.value);
             })
 
             const onSubmit = async () => {
+                submitPending.value = true;
                 try {
                     let resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value);
                     console.log({resp});
@@ -110,7 +111,8 @@
                         color: 'green-4',
                         textColor: 'white',
                         icon: 'cloud_done',
-                        message: 'Submitted'
+                        message: 'Submitted',
+                        position: 'top'
                     });
                     onReset(); // if successful, reset form
                 } catch (err) {
@@ -119,9 +121,11 @@
                         color: 'red-5',
                         textColor: 'white',
                         icon: 'warning',
-                        message: 'Failed to send message'
+                        message: 'Failed to send message',
+                        position: 'top'
                     })
                 }
+                submitPending.value = false;
             }
 
             const onReset = () => {
@@ -139,6 +143,7 @@
                 appointmentAgenda,
                 appointmentDate,
                 phoneError,
+                submitPending,
                 onSubmit,
                 onReset,
                 twilioStore

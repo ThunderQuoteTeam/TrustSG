@@ -11,11 +11,12 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          TrustSG
-        </q-toolbar-title>
+        <!-- <q-toolbar-title>TrustSG</q-toolbar-title> -->
 
-        <div>Quasar v{{ $q.version }}</div>
+        <!-- <div>Quasar v{{ $q.version }}</div> -->
+        <q-btn flat label="TrustSG" @click="returnHome"/>
+        <q-space/>
+        <q-btn label="Login" color="secondary"/>
       </q-toolbar>
     </q-header>
 
@@ -94,6 +95,7 @@ const linksList = [
 ];
 
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -103,14 +105,20 @@ export default defineComponent({
   },
 
   setup () {
-    const leftDrawerOpen = ref(false)
+    const leftDrawerOpen = ref(false);
+    const router = useRouter();
+
+    const returnHome = () => {
+      router.push('/');
+    }
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      },
+      returnHome
     }
   }
 })

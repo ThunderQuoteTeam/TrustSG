@@ -21,7 +21,7 @@
         </q-card-section>
         <q-separator />
         <q-card-actions>
-            <q-btn flat>Accept</q-btn>
+            <q-btn flat @click="acceptAppointment">Accept</q-btn>
             <q-btn flat @click="showPostponeForm">Postpone</q-btn>
         </q-card-actions>
     </q-card>
@@ -39,11 +39,31 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
+    <q-dialog v-model="verificationCodeVisible" persistent>
+        <q-card>
+            <q-card-section>
+                <div class="text-h6">NOTE: Verification Code</div>
+            </q-card-section>
+            <q-card-section>
+                <div class="text-h4">12345678</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+                Please ask the public officer to recite the code above when you begin the call.
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+                An SMS containing this code will also be sent to you shortly.
+            </q-card-section>
+            <q-card-actions align="right">
+                <q-btn flat label="OK" color="primary" v-close-popup />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
 <script>
     import { defineComponent, ref, watch } from 'vue';
     import DatePicker from './DatePicker.vue';
+    import useVerificationStore from 'src/stores/verification';
 
     export default defineComponent({
         components: {
@@ -53,27 +73,53 @@
             appointmentId: Number
         },
         setup(props) {
+            const verificationStore = useVerificationStore();
+
             const postponeFormVisible = ref(false);
             const showPostponeForm = () => {
-                console.log('current appointment id', props.appointmentId);
                 postponeFormVisible.value = true;
             }
             const hidePostponeForm = () => {
                 postponeFormVisible.value = false;
             }
+            const verificationCodeVisible = ref(false);
+            const showVerificationCode = () => {
+                verificationCodeVisible.value = true;
+            }
+            const hideVerificationCode = () => {
+                verificationCodeVisible.value = false;
+            }
 
             const postponedDateString = ref(null);
             const sendPostponeRequest = () => {
-                console.log(postponedDateString.value);
+                console.log(postponedDateString.value, props.appointmentId);
                 hidePostponeForm();
+            }
+
+            const acceptAppointment = async() => {
+                let resp;
+                try {
+                    resp = await verificationStore.createVerificationCode();
+                    console.log({resp});
+                } catch (err) {
+                    console.log({err});
+                    return;
+                }
+                const { otp } = resp.data;
+                console.log({otp});
+                showVerificationCode();
             }
 
             return {
                 postponeFormVisible,
                 showPostponeForm,
                 hidePostponeForm,
+                verificationCodeVisible,
+                showVerificationCode,
+                hideVerificationCode,
                 postponedDateString,
-                sendPostponeRequest
+                sendPostponeRequest,
+                acceptAppointment
             }
         }
     })
