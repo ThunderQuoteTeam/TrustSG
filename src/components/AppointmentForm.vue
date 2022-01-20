@@ -22,7 +22,7 @@
                               label="Phone Number"
                               hide-bottom-space/>
 
-            <q-input filled v-model="appointmentDate" label="Appointment Date">
+            <!-- <q-input filled v-model="appointmentDate" label="Appointment Date">
                 <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer q-mr-sm">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -43,7 +43,9 @@
                         </q-popup-proxy>
                     </q-icon>
                 </template>
-            </q-input>
+            </q-input> -->
+
+            <DatePicker v-model:parentDateString="appointmentDate" label="Appointment Date"/>
 
             <q-input
                 filled
@@ -56,8 +58,6 @@
             />
 
             <q-input v-model="appointmentAgenda" type="textarea" label="Agenda" filled/>
-
-            <!-- <q-toggle v-model="accept" label="I accept the license and terms" /> -->
 
             <div>
                 <q-btn label="Submit" type="submit" color="primary"/>
@@ -74,10 +74,12 @@
     import Vue3QTelInput from 'vue3-q-tel-input'
     import 'vue3-q-tel-input/dist/vue3-q-tel-input.esm.css'
     import useTwilioStore from '../stores/twilio';
+    import DatePicker from './DatePicker.vue';
 
     export default {
         components: {
-            Vue3QTelInput
+            Vue3QTelInput,
+            DatePicker
         },
         setup () {
             const $q = useQuasar();
@@ -93,7 +95,7 @@
             const appointmentDuration = ref(DEFAULT_STATES.appointmentDuration);
             const appointmentNumber = ref(DEFAULT_STATES.appointmentNumber)
             const appointmentAgenda = ref(DEFAULT_STATES.appointmentAgenda);
-            const appointmentDate = ref(DEFAULT_STATES.appointmentDate);
+            const appointmentDate = ref(DEFAULT_STATES.appointmentDate); // form input will give date STRING
             const phoneError = ref(false);
 
             watch(appointmentNumber, () => {
@@ -101,39 +103,31 @@
             })
 
             const onSubmit = async () => {
-                $q.notify({
-                    color: 'green-4',
-                    textColor: 'white',
-                    icon: 'cloud_done',
-                    message: 'Submitted'
-                });
                 try {
-                    let resp = await twilioStore.sendAppointmentMessage('SAMPLE_TO', appointmentAgenda.value);
+                    let resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value);
+                    console.log({resp});
+                    $q.notify({
+                        color: 'green-4',
+                        textColor: 'white',
+                        icon: 'cloud_done',
+                        message: 'Submitted'
+                    });
+                    onReset(); // if successful, reset form
                 } catch (err) {
                     console.log({err});
+                    $q.notify({
+                        color: 'red-5',
+                        textColor: 'white',
+                        icon: 'warning',
+                        message: 'Failed to send message'
+                    })
                 }
-                
-                // if (accept.value !== true) {
-                //     $q.notify({
-                //         color: 'red-5',
-                //         textColor: 'white',
-                //         icon: 'warning',
-                //         message: 'You need to accept the license and terms first'
-                //     })
-                // }
-                // else {
-                //     $q.notify({
-                //         color: 'green-4',
-                //         textColor: 'white',
-                //         icon: 'cloud_done',
-                //         message: 'Submitted'
-                //     })
-                // }
             }
 
             const onReset = () => {
                 appointmentNumber.value = DEFAULT_STATES.appointmentNumber;
                 appointmentAgenda.value = DEFAULT_STATES.appointmentAgenda;
+                appointmentDuration.value = DEFAULT_STATES.appointmentDuration;
                 appointmentDate.value = DEFAULT_STATES.appointmentDate;
             }
 

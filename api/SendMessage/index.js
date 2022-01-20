@@ -6,10 +6,11 @@ const client = require('twilio')(accountSid, authToken);
 module.exports = async function (context, req) {
     context.log('HTTP trigger for twilio');
     const body = req.body.messageBody;
+    const to = req.body.to;
     client.messages.create({
         body,
         messagingServiceSid,
-        to: '+6597664983'
+        to
     })
     const responseMessage = 'success';
 

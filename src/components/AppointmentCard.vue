@@ -1,5 +1,5 @@
 <template>
-    <q-card class="appointment-card bg-primary text-white">
+    <q-card class="appointment-card bg-primary text-white" v-bind="$attrs">
         <q-card-section>
             <div class="text-h6">Your Appointment</div>
         </q-card-section>
@@ -25,22 +25,55 @@
             <q-btn flat @click="showPostponeForm">Postpone</q-btn>
         </q-card-actions>
     </q-card>
+    <q-dialog v-model="postponeFormVisible" persistent>
+        <q-card style="min-width: 350px;">
+            <q-card-section>
+                <div class="text-h6">Postpone Call</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+                <DatePicker v-model:parentDateString="postponedDateString" :isFilledStyle="false" label="New Date and Time"/>
+            </q-card-section>
+            <q-card-actions align="right" class="text-primary">
+                <q-btn flat label="Cancel" v-close-popup />
+                <q-btn flat label="Postpone" @click="sendPostponeRequest" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
 <script>
-    import { defineComponent } from 'vue';
+    import { defineComponent, ref, watch } from 'vue';
+    import DatePicker from './DatePicker.vue';
 
     export default defineComponent({
-        props: {
-            appointmentId: String
+        components: {
+            DatePicker
         },
-        emits: ['showPostponeForm'],
-        setup(props, {emit}) {
+        props: {
+            appointmentId: Number
+        },
+        setup(props) {
+            const postponeFormVisible = ref(false);
             const showPostponeForm = () => {
-                emit('showPostponeForm', props.appointmentId);
+                console.log('current appointment id', props.appointmentId);
+                postponeFormVisible.value = true;
             }
+            const hidePostponeForm = () => {
+                postponeFormVisible.value = false;
+            }
+
+            const postponedDateString = ref(null);
+            const sendPostponeRequest = () => {
+                console.log(postponedDateString.value);
+                hidePostponeForm();
+            }
+
             return {
-                showPostponeForm
+                postponeFormVisible,
+                showPostponeForm,
+                hidePostponeForm,
+                postponedDateString,
+                sendPostponeRequest
             }
         }
     })

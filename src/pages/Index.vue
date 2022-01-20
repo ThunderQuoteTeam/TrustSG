@@ -6,12 +6,12 @@
       style="width: 200px; height: 200px"
     >
     <AppointmentForm/>
-    <AppointmentCard/>
+    <AppointmentCard :appointmentId="sampleAppointmentId"/>
   </q-page>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import AppointmentForm from 'components/AppointmentForm.vue';
 import AppointmentCard from 'src/components/AppointmentCard.vue';
 
@@ -20,6 +20,13 @@ export default defineComponent({
   components: {
     AppointmentForm,
     AppointmentCard
+  },
+  setup() {
+    const sampleAppointmentId = ref(1234);
+
+    return {
+      sampleAppointmentId
+    }
   }
 })
 </script>
