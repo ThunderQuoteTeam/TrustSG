@@ -14,23 +14,13 @@
                 :rules="[ val => val && val.length > 0 || 'Please type something']"
             /> -->
 
-            <!-- <q-input
-                filled
-                type="number"
-                v-model="age"
-                label="Your age *"
-                lazy-rules
-                :rules="[
-                val => val !== null && val !== '' || 'Please type your age',
-                val => val > 0 && val < 100 || 'Please type a real age'
-                ]"
-            /> -->
             <vue3-q-tel-input filled
                               defaultCountry="sg"
                               v-model:tel="appointmentNumber"
                               :required="true"
                               @error="phoneError"
-                              label="Phone Number"/>
+                              label="Phone Number"
+                              hide-bottom-space/>
 
             <q-input filled v-model="appointmentDate" label="Appointment Date">
                 <template v-slot:append>
@@ -54,6 +44,16 @@
                     </q-icon>
                 </template>
             </q-input>
+
+            <q-input
+                filled
+                type="number"
+                v-model="appointmentDuration"
+                label="Approx Duration (mins) *"
+                lazy-rules
+                :rules="[val => val !== null && val !== '' || 'Please enter a number']"
+                hide-bottom-space
+            />
 
             <q-input v-model="appointmentAgenda" type="textarea" label="Agenda" filled/>
 
@@ -85,11 +85,12 @@
             const DEFAULT_STATES = {
                 appointmentNumber: '',
                 appointmentAgenda: '',
-                appointmentDate: null
+                appointmentDate: null,
+                appointmentDuration: 0
             }
 
             // const name = ref(null);
-            // const age = ref(null);
+            const appointmentDuration = ref(DEFAULT_STATES.appointmentDuration);
             const appointmentNumber = ref(DEFAULT_STATES.appointmentNumber)
             const appointmentAgenda = ref(DEFAULT_STATES.appointmentAgenda);
             const appointmentDate = ref(DEFAULT_STATES.appointmentDate);
@@ -140,6 +141,7 @@
 
             return {
                 appointmentNumber,
+                appointmentDuration,
                 appointmentAgenda,
                 appointmentDate,
                 phoneError,
