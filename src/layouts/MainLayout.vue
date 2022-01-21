@@ -16,7 +16,7 @@
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn flat label="TrustSG" @click="returnHome"/>
         <q-space/>
-        <q-btn label="Login" color="secondary"/>
+        <q-btn label="Login" @click="login" color="secondary"/>
       </q-toolbar>
     </q-header>
 
@@ -96,6 +96,7 @@ const linksList = [
 
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router';
+import useAuthenticationStore from 'src/stores/authentication';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -107,9 +108,14 @@ export default defineComponent({
   setup () {
     const leftDrawerOpen = ref(false);
     const router = useRouter();
+    const authStore = useAuthenticationStore();
 
     const returnHome = () => {
       router.push('/');
+    }
+
+    const login = async () => {
+      window.location.replace(authStore.loginUrl);
     }
 
     return {
@@ -118,7 +124,8 @@ export default defineComponent({
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
-      returnHome
+      returnHome,
+      login
     }
   }
 })

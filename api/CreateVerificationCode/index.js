@@ -2,12 +2,12 @@ function getRandomInt(max=10) {
     return Math.floor(Math.random() * max);
 }
 
-function generateOtp(length=8) {
+function generateOtp(length=6) {
     const numArr = Array(length).fill(0);
     for (let i = 0; i < numArr.length; i++) {
         numArr[i] = getRandomInt();
     }
-    return parseInt(numArr.join(''), 10);
+    return numArr.join('');
 }
 
 module.exports = async function (context, req) {

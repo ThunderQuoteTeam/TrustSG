@@ -21,7 +21,7 @@
         </q-card-section>
         <q-separator />
         <q-card-actions>
-            <q-btn flat @click="acceptAppointment">Accept</q-btn>
+            <q-btn flat @click="acceptAppointment" :loading="acceptAppointmentPending">Accept</q-btn>
             <q-btn flat @click="showPostponeForm">Postpone</q-btn>
         </q-card-actions>
     </q-card>
@@ -39,13 +39,13 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
-    <q-dialog v-model="verificationCodeVisible" persistent>
+    <q-dialog v-model="verificationCodeModalVisible" persistent>
         <q-card>
             <q-card-section>
                 <div class="text-h6">NOTE: Verification Code</div>
             </q-card-section>
             <q-card-section>
-                <div class="text-h4">12345678</div>
+                <div class="text-h4">{{ verificationCode }}</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
                 Please ask the public officer to recite the code above when you begin the call.
@@ -62,6 +62,7 @@
 
 <script>
     import { defineComponent, ref, watch } from 'vue';
+    import { useQuasar } from 'quasar';
     import DatePicker from './DatePicker.vue';
     import useVerificationStore from 'src/stores/verification';
 
@@ -74,6 +75,7 @@
         },
         setup(props) {
             const verificationStore = useVerificationStore();
+            const $q = useQuasar();
 
             const postponeFormVisible = ref(false);
             const showPostponeForm = () => {
@@ -82,43 +84,56 @@
             const hidePostponeForm = () => {
                 postponeFormVisible.value = false;
             }
-            const verificationCodeVisible = ref(false);
-            const showVerificationCode = () => {
-                verificationCodeVisible.value = true;
-            }
-            const hideVerificationCode = () => {
-                verificationCodeVisible.value = false;
-            }
-
             const postponedDateString = ref(null);
             const sendPostponeRequest = () => {
                 console.log(postponedDateString.value, props.appointmentId);
                 hidePostponeForm();
             }
 
+            const verificationCode = ref('');
+            const verificationCodeModalVisible = ref(false);
+            const showVerificationCodeModal = () => {
+                verificationCodeModalVisible.value = true;
+            }
+            const hideVerificationCodeModal = () => {
+                verificationCodeModalVisible.value = false;
+            }
+            const acceptAppointmentPending = ref(false);
             const acceptAppointment = async() => {
+                acceptAppointmentPending.value = true;
                 let resp;
                 try {
                     resp = await verificationStore.createVerificationCode();
-                    console.log({resp});
                 } catch (err) {
                     console.log({err});
+                    acceptAppointmentPending.value = false;
+                    $q.notify({
+                        color: 'red-5',
+                        textColor: 'white',
+                        icon: 'warning',
+                        message: 'Failed to confirm appointment. Please try again.',
+                        position: 'top'
+                    })
                     return;
                 }
                 const { otp } = resp.data;
                 console.log({otp});
-                showVerificationCode();
+                verificationCode.value = otp;
+                acceptAppointmentPending.value = false;
+                showVerificationCodeModal();
             }
 
             return {
                 postponeFormVisible,
                 showPostponeForm,
                 hidePostponeForm,
-                verificationCodeVisible,
-                showVerificationCode,
-                hideVerificationCode,
+                verificationCode,
+                verificationCodeModalVisible,
+                showVerificationCodeModal,
+                hideVerificationCodeModal,
                 postponedDateString,
                 sendPostponeRequest,
+                acceptAppointmentPending,
                 acceptAppointment
             }
         }

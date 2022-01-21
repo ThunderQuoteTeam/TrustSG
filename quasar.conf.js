@@ -47,7 +47,8 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       // env: require('dotenv').config().parsed,
       env: {
-        AZURE_FUNCTION_APP_URL: "https://trustsg-backend.azurewebsites.net"
+        AZURE_FUNCTION_APP_URL: "https://trustsg-backend.azurewebsites.net",
+        AZURE_APP_URL: "https://nice-smoke-0986a0310.1.azurestaticapps.net"
       },
 
       // transpile: false,
@@ -80,7 +81,7 @@ module.exports = configure(function (ctx) {
         type: 'http'
       },
       port: 8080,
-      open: true // opens browser window automatically
+      open: false // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
