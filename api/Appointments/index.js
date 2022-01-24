@@ -9,14 +9,20 @@ module.exports = async function (context, req) {
     switch (req.method) {
         case "GET":
             // query to return all items
-            const querySpec = req.query.id ? 
-                {
-                    query: "SELECT * from c WHERE c.id = *@id* LIMIT 1",
-                    parameters: [{name: "@id", value: req.query.id}]
-                } :
-                {
+            let querySpec;
+            if (req.query.id) {
+                querySpec = {
+                    query: "SELECT * from c WHERE c.id = @id",
+                    parameters: [
+                        {name: "@id", value: req.query.id}
+                    ]
+                }
+            } else {
+                querySpec = {
                     query: "SELECT * from c"
                 }
+            }
+                
             const { resources: items } = await container.items
             .query(querySpec)
             .fetchAll();

@@ -79,16 +79,16 @@
             const databaseStore = useDatabaseStore();
             const $q = useQuasar();
 
-            const appointmentData = {
+            const appointmentData = ref({
                 date: '',
                 duration: '',
                 agenda: ''
-            }
+            })
             onMounted(async () => {
                 const { data } = await databaseStore.getAppointment(props.appointmentId);
-                appointmentData.date = data.date;
-                appointmentData.duration = data.duration;
-                appointmentData.agenda = data.agenda;
+                appointmentData.value.date = data.date;
+                appointmentData.value.duration = data.duration;
+                appointmentData.value.agenda = data.agenda;
             })
 
             const postponeFormVisible = ref(false);
