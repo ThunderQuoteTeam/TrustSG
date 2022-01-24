@@ -6,16 +6,16 @@
         <q-card-section>
             <div class="q-mb-md flex no-wrap">
                 <q-icon name="event" :size="'sm'"/>
-                <p class="q-mb-none q-ml-sm">DATETIME</p>
+                <p class="q-mb-none q-ml-sm">{{ appointmentData.date }}</p>
             </div>
             <div class="q-mb-md flex no-wrap">
                 <q-icon name="timer" :size="'sm'"/>
-                <p class="q-mb-none q-ml-sm">DURATION</p>
+                <p class="q-mb-none q-ml-sm">{{ appointmentData.duration }}</p>
             </div>
             <div class="flex no-wrap">
                 <q-icon name="description" :size="'sm'"/>
                 <p class="q-mb-none q-ml-sm">
-                    Agenda: AGENDA Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem maxime tempora consectetur quas magnam debitis nisi accusantium dolore, consequuntur harum soluta possimus. Sit accusamus ipsum numquam vero eligendi ratione earum?
+                    {{ appointmentData.agenda }}
                 </p>
             </div>
         </q-card-section>
@@ -61,10 +61,11 @@
 </template>
 
 <script>
-    import { defineComponent, ref, watch } from 'vue';
+    import { defineComponent, ref, watch, onMounted } from 'vue';
     import { useQuasar } from 'quasar';
     import DatePicker from './DatePicker.vue';
     import useVerificationStore from 'src/stores/verification';
+    import useDatabaseStore from 'src/stores/database';
 
     export default defineComponent({
         components: {
@@ -75,7 +76,20 @@
         },
         setup(props) {
             const verificationStore = useVerificationStore();
+            const databaseStore = useDatabaseStore();
             const $q = useQuasar();
+
+            const appointmentData = {
+                date: '',
+                duration: '',
+                agenda: ''
+            }
+            onMounted(async () => {
+                const { data } = await databaseStore.getAppointment(props.appointmentId);
+                appointmentData.date = data.date;
+                appointmentData.duration = data.duration;
+                appointmentData.agenda = data.agenda;
+            })
 
             const postponeFormVisible = ref(false);
             const showPostponeForm = () => {
@@ -134,7 +148,8 @@
                 postponedDateString,
                 sendPostponeRequest,
                 acceptAppointmentPending,
-                acceptAppointment
+                acceptAppointment,
+                appointmentData
             }
         }
     })
