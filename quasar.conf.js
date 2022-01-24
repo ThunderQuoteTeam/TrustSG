@@ -145,7 +145,7 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: `TrustSG`,
         short_name: `TrustSG`,
-        description: `A Quasar Framework app`,
+        description: `Real Time Proof-of-Identity for the Public`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

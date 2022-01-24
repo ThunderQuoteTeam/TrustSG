@@ -1,6 +1,6 @@
 <template>
     <q-table title="Your Appointments"
-             :rows="rows"
+             :rows="formattedAppointments"
              :columns="columns"
              row-key="id">
         <template v-slot:body-cell-actions="props">
@@ -24,10 +24,13 @@
 </template>
 
 <script>
-    import { defineComponent, ref, computed } from 'vue';
+    import { defineComponent, ref, computed, onMounted } from 'vue';
+    import useDatabaseStore from 'src/stores/database';
 
     export default defineComponent({
         setup() {
+            const databaseStore = useDatabaseStore();
+
             // ------------ DATA ----------------------
             const columns = ref([
                 {
@@ -45,36 +48,63 @@
                 { name: 'actions', label: 'Actions', field: row => row, align: 'center' }
             ]);
 
-            const rows = ref([
-                {
-                    id: '1',
-                    callerId: '+6597664983',
-                    status: 'pending',
-                    verificationCode: '-',
-                    postponedDate: '-'
-                },
-                {
-                    id: '2',
-                    callerId: '+6597664983',
-                    status: 'accepted',
-                    verificationCode: '-',
-                    postponedDate: '-'
-                },
-                {
-                    id: '3',
-                    callerId: '+6597664983',
-                    status: 'completed',
-                    verificationCode: '-',
-                    postponedDate: '-'
-                },
-                {
-                    id: '4',
-                    callerId: '+6597664983',
-                    status: 'postponed',
-                    verificationCode: '-',
-                    postponedDate: '-'
+            // const rows = ref([
+            //     {
+            //         id: '1',
+            //         callerId: '+6597664983',
+            //         status: 'pending',
+            //         verificationCode: '-',
+            //         postponedDate: '-'
+            //     },
+            //     {
+            //         id: '2',
+            //         callerId: '+6597664983',
+            //         status: 'accepted',
+            //         verificationCode: '-',
+            //         postponedDate: '-'
+            //     },
+            //     {
+            //         id: '3',
+            //         callerId: '+6597664983',
+            //         status: 'completed',
+            //         verificationCode: '-',
+            //         postponedDate: '-'
+            //     },
+            //     {
+            //         id: '4',
+            //         callerId: '+6597664983',
+            //         status: 'postponed',
+            //         verificationCode: '-',
+            //         postponedDate: '-'
+            //     }
+            // ])
+            onMounted(() => {
+                getAllAppointments();
+            });
+
+            const rawAppointments = ref([]);
+            const getAllAppointments = async () => {
+                let resp;
+                try {
+                    resp = await databaseStore.getAllAppointments();
+                } catch (err) {
+                    console.log({err});
                 }
-            ])
+                console.log({resp});
+                rawAppointments.value = resp.data;
+            }
+            const formattedAppointments = computed(() => {
+                return rawAppointments.value.map(el => {
+                    const formattedEl = el;
+                    if (!formattedEl.verificationCode) {
+                        formattedEl.verificationCode = '-';
+                    }
+                    if (!formattedEl.postponedDate) {
+                        formattedEl.postponedDate = "-";
+                    }
+                    return formattedEl;
+                })
+            });
 
             // ------------------ ACTIONS ---------------
             const viewAppointmentDetails = (appointmentId) => {
@@ -109,8 +139,9 @@
             }
             return {
                 columns,
-                rows,
-                generateActions
+                // rows,
+                generateActions,
+                formattedAppointments
             }
         }
     })
