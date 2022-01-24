@@ -2,6 +2,7 @@
     <q-table title="Your Appointments"
              :rows="formattedAppointments"
              :columns="columns"
+             :grid="$q.screen.xs"
              row-key="id">
         <template v-slot:body-cell-actions="props">
             <q-td :props="props">

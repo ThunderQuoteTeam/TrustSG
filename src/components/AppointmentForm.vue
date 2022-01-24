@@ -107,29 +107,8 @@
 
             const onSubmit = async () => {
                 submitPending.value = true;
-                try {
-                    let resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value);
-                    console.log({resp});
-                    $q.notify({
-                        color: 'green-4',
-                        textColor: 'white',
-                        icon: 'cloud_done',
-                        message: 'Submitted',
-                        position: 'top'
-                    });
-                    onReset(); // if successful, reset form
-                } catch (err) {
-                    console.log({err});
-                    $q.notify({
-                        color: 'red-5',
-                        textColor: 'white',
-                        icon: 'warning',
-                        message: 'Failed to send message',
-                        position: 'top'
-                    })
-                }
-
-                // create appointment in cosmos db
+                let resp;
+                // create appointment in cosmos db, if this fails, dont do any messaging
                 const newAppointment = {
                     id: uuidv4(),
                     callerId: appointmentNumber.value,
@@ -149,6 +128,30 @@
                         textColor: 'white',
                         icon: 'warning',
                         message: 'Failed to create appointment in the database',
+                        position: 'top'
+                    });
+                    submitPending.value = false;
+                    return
+                }
+
+                try {
+                    resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value);
+                    console.log({resp});
+                    $q.notify({
+                        color: 'green-4',
+                        textColor: 'white',
+                        icon: 'cloud_done',
+                        message: 'Submitted',
+                        position: 'top'
+                    });
+                    onReset(); // if successful, reset form
+                } catch (err) {
+                    console.log({err});
+                    $q.notify({
+                        color: 'red-5',
+                        textColor: 'white',
+                        icon: 'warning',
+                        message: 'Failed to send message',
                         position: 'top'
                     })
                 }
