@@ -68,11 +68,13 @@
 </template>
 
 <script>
+    import { v4 as uuidv4 } from 'uuid';
     import { useQuasar } from 'quasar'
     import { ref, watch } from 'vue'
     import Vue3QTelInput from 'vue3-q-tel-input'
     import 'vue3-q-tel-input/dist/vue3-q-tel-input.esm.css'
     import useTwilioStore from '../stores/twilio';
+    import useDatabaseStore from 'src/stores/database';
     import DatePicker from './DatePicker.vue';
 
     export default {
@@ -82,6 +84,7 @@
         },
         setup () {
             const $q = useQuasar();
+            const databaseStore = useDatabaseStore();
 
             const DEFAULT_STATES = {
                 appointmentNumber: '',
@@ -125,6 +128,31 @@
                         position: 'top'
                     })
                 }
+
+                // create appointment in cosmos db
+                const newAppointment = {
+                    id: uuidv4(),
+                    callerId: appointmentNumber.value,
+                    duration: appointmentDuration.value,
+                    date: appointmentDate.value,
+                    agenda: appointmentAgenda.value,
+                    status: "pending",
+                    verificationCode: "",
+                    postponedDate: ""
+                }
+                try {
+                    resp = await databaseStore.createAppointment(newAppointment);
+                } catch (err) {
+                    console.log({err});
+                    $q.notify({
+                        color: 'red-5',
+                        textColor: 'white',
+                        icon: 'warning',
+                        message: 'Failed to create appointment in the database',
+                        position: 'top'
+                    })
+                }
+
                 submitPending.value = false;
             }
 

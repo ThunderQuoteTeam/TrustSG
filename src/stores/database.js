@@ -8,7 +8,12 @@ const useDatabaseStore = defineStore('database', {
     },
     actions: {
         async getAllAppointments() {
+            // to get appointments by user/public officer ID
             return this.axiosInstance.get('/appointments');
+        },
+        async createAppointment(newAppointment) {
+            // make sure newAppointment has the correct schema, because cosmos does not enforce
+            return this.axiosInstance.post('/appointments', {newAppointment});
         }
     }
 })

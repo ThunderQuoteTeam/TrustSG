@@ -18,6 +18,9 @@ module.exports = async function (context, req) {
             result = items;
             break;
         case "POST":
+            const { resource: createdItem } = await container.items.create(req.body.newAppointment);
+            result = createdItem;
+            break;
         case "PATCH":
         default:
             result = "placeholder";

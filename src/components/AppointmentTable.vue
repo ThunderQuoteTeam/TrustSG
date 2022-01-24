@@ -42,6 +42,7 @@
                     align: 'left'
                 },
                 { name: 'callerId', label: 'Caller ID', field: 'callerId', align: 'center' },
+                { name: 'date', label: 'Date', field: 'date', align: 'center' },
                 { name: 'status', label: 'Status', field: 'status', align: 'center' },
                 { name: 'verificationCode', label: 'Verification Code', field: 'verificationCode', align: 'center' },
                 { name: 'postponedDate', label: 'Postponed Date', field: 'postponedDate', align: 'center' },
@@ -95,7 +96,7 @@
             }
             const formattedAppointments = computed(() => {
                 return rawAppointments.value.map(el => {
-                    const formattedEl = el;
+                    const formattedEl = {...el};
                     if (!formattedEl.verificationCode) {
                         formattedEl.verificationCode = '-';
                     }
