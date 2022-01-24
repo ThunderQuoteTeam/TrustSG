@@ -34,17 +34,18 @@
 
             // ------------ DATA ----------------------
             const columns = ref([
-                {
-                    name: 'id',
-                    required: true,
-                    label: 'ID',
-                    field: row => row.id,
-                    sortable: true,
-                    align: 'left'
-                },
+                // {
+                //     name: 'id',
+                //     required: true,
+                //     label: 'ID',
+                //     field: row => row.id,
+                //     sortable: true,
+                //     align: 'left'
+                // },
                 { name: 'callerId', label: 'Caller ID', field: 'callerId', align: 'center' },
                 { name: 'date', label: 'Date', field: 'date', align: 'center' },
                 { name: 'status', label: 'Status', field: 'status', align: 'center' },
+                { name: 'smsStatus', label: 'SMS Status', field: 'messageStatus', align: 'center' },
                 { name: 'verificationCode', label: 'Verification Code', field: 'verificationCode', align: 'center' },
                 { name: 'postponedDate', label: 'Postponed Date', field: 'postponedDate', align: 'center' },
                 { name: 'actions', label: 'Actions', field: row => row, align: 'center' }
@@ -112,8 +113,13 @@
             const viewAppointmentDetails = (appointmentId) => {
                 console.log('viewing details for', {appointmentId});
             }
-            const markAppointmentCompleted = (appointmentId) => {
+            const markAppointmentCompleted = async (appointmentId) => {
                 console.log('marking completed for', {appointmentId});
+                const updatedAppointment = {
+                    id: appointmentId,
+                    status: "completed"
+                }
+                return databaseStore.updateAppointment(updatedAppointment);
             }
             const connectCall = (callerId) => {
                 console.log('making a call to:', {callerId});

@@ -33,6 +33,12 @@ module.exports = async function (context, req) {
             result = createdItem;
             break;
         case "PATCH":
+            const patchBody = req.body.updatedBody;
+            const id = patchBody.id;
+            delete patchBody.id;
+            const { resource: updatedItem } = await container.item(id, id).patch(patchBody);
+            result = updatedItem;
+            break;
         default:
             result = "placeholder";
             break;

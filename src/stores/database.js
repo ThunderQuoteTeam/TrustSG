@@ -17,6 +17,9 @@ const useDatabaseStore = defineStore('database', {
         async createAppointment(newAppointment) {
             // make sure newAppointment has the correct schema, because cosmos does not enforce
             return this.axiosInstance.post('/appointments', {newAppointment});
+        },
+        async updateAppointment(updatedBody) {
+            return this.axiosInstance.patch('/appointments', {updatedBody});
         }
     }
 })

@@ -86,10 +86,10 @@
             })
             onMounted(async () => {
                 const { data } = await databaseStore.getAppointment(props.appointmentId);
-                console.log({data});
-                appointmentData.value.date = data.date;
-                appointmentData.value.duration = data.duration;
-                appointmentData.value.agenda = data.agenda;
+                const el = data[0]; // returns an array (of 1 ele)
+                appointmentData.value.date = el.date;
+                appointmentData.value.duration = el.duration;
+                appointmentData.value.agenda = el.agenda;
             })
 
             const postponeFormVisible = ref(false);
