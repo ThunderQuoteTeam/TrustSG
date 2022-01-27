@@ -1,7 +1,11 @@
 <template>
-    <q-card class="appointment-card bg-primary text-white" v-bind="$attrs" :key="renderKey">
+    <q-card class="appointment-card text-white"
+            v-bind="$attrs"
+            :key="renderKey"
+            :class="appointmentData.isActionable ? 'bg-primary' : 'bg-secondary'">
         <q-card-section>
             <div class="text-h6">Your Appointment</div>
+            <p v-if="!appointmentData.isActionable" class="q-mb-none">This appointment has already been accepted</p>
         </q-card-section>
         <q-card-section>
             <div class="q-mb-md flex no-wrap">
