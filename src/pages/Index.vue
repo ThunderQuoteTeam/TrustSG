@@ -6,21 +6,18 @@
       style="width: 200px; height: 200px"
     > -->
     <AppointmentForm/>
-    <AppointmentTable/>
   </q-page>
 </template>
 
 <script>
 import { defineComponent, onMounted } from 'vue';
 import AppointmentForm from 'components/AppointmentForm.vue';
-import AppointmentTable from 'src/components/AppointmentTable.vue';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'PageIndex',
   components: {
-    AppointmentForm,
-    AppointmentTable
+    AppointmentForm
   },
   setup() {
     const route = useRoute();
