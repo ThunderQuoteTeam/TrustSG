@@ -5,8 +5,8 @@
             :class="appointmentData.isActionable ? 'bg-primary' : appointmentData.isPostponed ? 'bg-warning' : 'bg-secondary'">
         <q-card-section>
             <div class="text-h6">Your Appointment</div>
-            <p v-if="!appointmentData.isActionable" class="q-mb-none">This appointment has already been accepted</p>
-            <p v-else-if="appointmentData.isPostponed" class="q-mb-none">This appointment was postponed</p>
+            <p v-if="appointmentData.isPostponed" class="q-mb-none">This appointment was postponed</p>
+            <p v-else-if="!appointmentData.isActionable" class="q-mb-none">This appointment has already been accepted</p>
         </q-card-section>
         <q-card-section>
             <div class="q-mb-md flex no-wrap">
@@ -116,7 +116,8 @@
                 console.log(postponedDateString.value, props.appointmentId);
                 const updatedAppointment = {
                     id: props.appointmentId,
-                    postponedDate: postponedDateString.value
+                    postponedDate: postponedDateString.value,
+                    status: "postponed"
                 }
                 await databaseStore.updateAppointment(updatedAppointment);
                 hidePostponeForm();

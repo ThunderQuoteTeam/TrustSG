@@ -56,6 +56,7 @@
                 hide-bottom-space
             />
 
+            <q-input v-model="appointmentAgency" type="text" label="Agency (e.g. MOH)" filled/>
             <q-input v-model="appointmentAgenda" type="textarea" label="Agenda" filled/>
 
             <div>
@@ -90,10 +91,12 @@
                 appointmentNumber: '',
                 appointmentAgenda: '',
                 appointmentDate: null,
-                appointmentDuration: 0
+                appointmentDuration: 0,
+                appointmentAgency: ''
             }
 
             // const name = ref(null);
+            const appointmentAgency = ref(DEFAULT_STATES.appointmentAgency);
             const appointmentDuration = ref(DEFAULT_STATES.appointmentDuration);
             const appointmentNumber = ref(DEFAULT_STATES.appointmentNumber)
             const appointmentAgenda = ref(DEFAULT_STATES.appointmentAgenda);
@@ -136,7 +139,7 @@
                 }
 
                 try {
-                    resp = await twilioStore.sendAppointmentMessage(id, appointmentNumber.value, appointmentAgenda.value, appointmentDate.value);
+                    resp = await twilioStore.sendAppointmentMessage(id, appointmentNumber.value, appointmentAgenda.value, appointmentDate.value, appointmentDuration.value, appointmentAgency.value);
                     console.log({resp});
                     $q.notify({
                         color: 'green-4',
@@ -165,6 +168,7 @@
                 appointmentAgenda.value = DEFAULT_STATES.appointmentAgenda;
                 appointmentDuration.value = DEFAULT_STATES.appointmentDuration;
                 appointmentDate.value = DEFAULT_STATES.appointmentDate;
+                appointmentAgency.value = DEFAULT_STATES.appointmentAgency;
             }
 
             const twilioStore = useTwilioStore();
