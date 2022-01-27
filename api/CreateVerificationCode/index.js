@@ -1,3 +1,8 @@
+const axios = require('axios');
+const $ = axios.create({
+    baseURL: process.env.FUNCTION_APP_URL
+})
+
 function getRandomInt(max=10) {
     return Math.floor(Math.random() * max);
 }
