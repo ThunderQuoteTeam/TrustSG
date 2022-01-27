@@ -88,7 +88,7 @@
                 const { data } = await databaseStore.getAppointment(props.appointmentId);
                 const el = data[0]; // returns an array (of 1 ele)
                 appointmentData.value.date = el.date;
-                appointmentData.value.duration = el.duration;
+                appointmentData.value.duration = `${el.duration} mins`;
                 appointmentData.value.agenda = el.agenda;
             })
 

@@ -101,8 +101,8 @@
             const phoneError = ref(false);
             const submitPending = ref(false);
 
-            watch(appointmentNumber, () => {
-                console.log(appointmentNumber.value);
+            watch(appointmentDate, () => {
+                console.log(appointmentDate.value, new Date(appointmentDate.value));
             })
 
             const onSubmit = async () => {
@@ -135,7 +135,7 @@
                 }
 
                 try {
-                    resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value);
+                    resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value, appointmentDate.value);
                     console.log({resp});
                     $q.notify({
                         color: 'green-4',

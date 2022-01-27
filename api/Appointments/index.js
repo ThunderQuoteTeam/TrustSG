@@ -33,10 +33,20 @@ module.exports = async function (context, req) {
             result = createdItem;
             break;
         case "PATCH":
-            const patchBody = req.body.updatedBody;
-            const id = patchBody.id;
-            delete patchBody.id;
-            const { resource: updatedItem } = await container.item(id, id).patch(patchBody);
+            const updatedBody = req.body.updatedBody;
+            const id = updatedBody.id;
+            const patchBody = [];
+            // see microsoft's github repo for more details
+            for (const [key, newVal] of Object.entries(updatedBody)) {
+                if (key !== 'id') {
+                    patchBody.push({
+                        path: key,
+                        value: newVal,
+                        op: "replace"
+                    })
+                }
+            }
+            const { resource: updatedItem } = await container.item(id).patch(patchBody);
             result = updatedItem;
             break;
         default:
