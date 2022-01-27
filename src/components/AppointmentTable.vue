@@ -128,12 +128,12 @@
                 console.log('making a call to:', {callerId});
             }
             const generateActions = (row) => {
-                const actions = [
-                    {
-                        label: 'View Details',
-                        callback: () => viewAppointmentDetails(row.id)
-                    }
-                ];
+                // const actions = [
+                //     {
+                //         label: 'View Details',
+                //         callback: () => viewAppointmentDetails(row.id)
+                //     }
+                // ];
                 if (row.status === 'accepted') {
                     actions.push({
                         label: 'Call Now',

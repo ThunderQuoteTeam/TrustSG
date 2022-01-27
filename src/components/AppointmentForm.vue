@@ -178,6 +178,7 @@
                 appointmentDuration,
                 appointmentAgenda,
                 appointmentDate,
+                appointmentAgency,
                 phoneError,
                 submitPending,
                 onSubmit,
