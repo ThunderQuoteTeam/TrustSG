@@ -21,6 +21,9 @@
                 </q-btn-dropdown>
             </q-td>
         </template>
+        <template v-slot:top-right>
+            <q-btn icon="refresh" flat @click="getAllAppointments"/>
+        </template>
     </q-table>
 </template>
 
@@ -45,7 +48,6 @@
                 { name: 'callerId', label: 'Caller ID', field: 'callerId', align: 'center' },
                 { name: 'date', label: 'Date', field: 'date', align: 'center' },
                 { name: 'status', label: 'Status', field: 'status', align: 'center' },
-                { name: 'smsStatus', label: 'SMS Status', field: 'messageStatus', align: 'center' },
                 { name: 'verificationCode', label: 'Verification Code', field: 'verificationCode', align: 'center' },
                 { name: 'postponedDate', label: 'Postponed Date', field: 'postponedDate', align: 'center' },
                 { name: 'actions', label: 'Actions', field: row => row, align: 'center' }
@@ -153,7 +155,8 @@
                 columns,
                 // rows,
                 generateActions,
-                formattedAppointments
+                formattedAppointments,
+                getAllAppointments
             }
         }
     })

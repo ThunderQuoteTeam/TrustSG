@@ -1,5 +1,5 @@
 <template>
-    <q-card class="appointment-card bg-primary text-white" v-bind="$attrs">
+    <q-card class="appointment-card bg-primary text-white" v-bind="$attrs" :key="renderKey">
         <q-card-section>
             <div class="text-h6">Your Appointment</div>
         </q-card-section>
@@ -21,8 +21,8 @@
         </q-card-section>
         <q-separator />
         <q-card-actions>
-            <q-btn flat @click="acceptAppointment" :loading="acceptAppointmentPending">Accept</q-btn>
-            <q-btn flat @click="showPostponeForm">Postpone</q-btn>
+            <q-btn :disable="!appointmentData.isActionable" flat @click="acceptAppointment" :loading="acceptAppointmentPending">Accept</q-btn>
+            <q-btn :disable="!appointmentData.isActionable" flat @click="showPostponeForm">Postpone</q-btn>
         </q-card-actions>
     </q-card>
     <q-dialog v-model="postponeFormVisible" persistent>
@@ -34,8 +34,8 @@
                 <DatePicker v-model:parentDateString="postponedDateString" :isFilledStyle="false" label="New Date and Time"/>
             </q-card-section>
             <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="Cancel" v-close-popup />
-                <q-btn flat label="Postpone" @click="sendPostponeRequest" />
+                <q-btn :disable="!appointmentData.isActionable" flat label="Cancel" v-close-popup />
+                <q-btn :disable="!appointmentData.isActionable" flat label="Postpone" @click="sendPostponeRequest" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -54,7 +54,7 @@
                 An SMS containing this code will also be sent to you shortly.
             </q-card-section>
             <q-card-actions align="right">
-                <q-btn flat label="OK" color="primary" v-close-popup />
+                <q-btn flat label="OK" color="primary" @click="hideVerificationCodeModal" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -82,15 +82,20 @@
             const appointmentData = ref({
                 date: '',
                 duration: '',
-                agenda: ''
+                agenda: '',
+                isActionable: false
             })
             onMounted(async () => {
+                assignData();
+            })
+            const assignData = async () => {
                 const { data } = await databaseStore.getAppointment(props.appointmentId);
                 const el = data[0]; // returns an array (of 1 ele)
                 appointmentData.value.date = el.date;
                 appointmentData.value.duration = `${el.duration} mins`;
                 appointmentData.value.agenda = el.agenda;
-            })
+                appointmentData.value.isActionable = el.status === 'pending';
+            }
 
             const postponeFormVisible = ref(false);
             const showPostponeForm = () => {
@@ -110,8 +115,10 @@
             const showVerificationCodeModal = () => {
                 verificationCodeModalVisible.value = true;
             }
-            const hideVerificationCodeModal = () => {
+            const hideVerificationCodeModal = async () => {
                 verificationCodeModalVisible.value = false;
+                await assignData();
+                renderKey.value += 1;
             }
             const acceptAppointmentPending = ref(false);
             const acceptAppointment = async() => {
@@ -138,6 +145,7 @@
                 showVerificationCodeModal();
             }
 
+            const renderKey = ref(0);
             return {
                 postponeFormVisible,
                 showPostponeForm,
@@ -150,7 +158,8 @@
                 sendPostponeRequest,
                 acceptAppointmentPending,
                 acceptAppointment,
-                appointmentData
+                appointmentData,
+                renderKey
             }
         }
     })
