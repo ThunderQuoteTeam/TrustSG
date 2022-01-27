@@ -7,8 +7,8 @@ const useVerificationStore = defineStore('verification', {
         }
     },
     actions: {
-        async createVerificationCode() {
-            return this.axiosInstance.post('/createverificationcode');
+        async createVerificationCode(appointmentId) {
+            return this.axiosInstance.post('/createverificationcode', {appointmentId});
         }
     }
 })

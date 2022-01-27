@@ -109,8 +109,9 @@
                 submitPending.value = true;
                 let resp;
                 // create appointment in cosmos db, if this fails, dont do any messaging
+                const id = uuidv4();
                 const newAppointment = {
-                    id: uuidv4(),
+                    id,
                     callerId: appointmentNumber.value,
                     duration: appointmentDuration.value,
                     date: appointmentDate.value,
@@ -135,7 +136,7 @@
                 }
 
                 try {
-                    resp = await twilioStore.sendAppointmentMessage(appointmentNumber.value, appointmentAgenda.value, appointmentDate.value);
+                    resp = await twilioStore.sendAppointmentMessage(id, appointmentNumber.value, appointmentAgenda.value, appointmentDate.value);
                     console.log({resp});
                     $q.notify({
                         color: 'green-4',

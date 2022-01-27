@@ -12,6 +12,7 @@ function generateOtp(length=6) {
 
 module.exports = async function (context, req) {
     context.log('HTTP trigger for creating verification code');
+    const { appointmentId } = req.body;
     const otp = generateOtp();
     const responseMessage = {otp};
 

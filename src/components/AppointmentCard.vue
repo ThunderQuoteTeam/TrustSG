@@ -118,7 +118,7 @@
                 acceptAppointmentPending.value = true;
                 let resp;
                 try {
-                    resp = await verificationStore.createVerificationCode();
+                    resp = await verificationStore.createVerificationCode(props.appointmentId);
                 } catch (err) {
                     console.log({err});
                     acceptAppointmentPending.value = false;
