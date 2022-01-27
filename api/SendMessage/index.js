@@ -3,30 +3,36 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
 const client = require('twilio')(accountSid, authToken);
 
-const { ServiceBusClient } = require("@azure/service-bus");
-const sbClient = new ServiceBusClient(process.env.AzureWebJobsServiceBus);
-const queueName = "twilio-message";
-const receiver = sbClient.createReceiver(queueName);
+// const { ServiceBusClient } = require("@azure/service-bus");
+// const sbClient = new ServiceBusClient(process.env.AzureWebJobsServiceBus);
+// const queueName = "twilio-message";
+// const receiver = sbClient.createReceiver(queueName);
 
-const messageHandler = async (messageReceived) => {
-    console.log(`Received message: ${messageReceived.body}`);
-    const { body, to } = JSON.parse(messageReceived.body);
+// const messageHandler = async (messageReceived) => {
+//     console.log(`Received message: ${messageReceived.body}`);
+//     const { body, to } = JSON.parse(messageReceived.body);
+//     client.messages.create({
+//         body,
+//         messagingServiceSid,
+//         to
+//     })
+// };
+// const errorHandler = async (error) => {
+//     console.log(error);
+// };
+// receiver.subscribe({
+//     processMessage: messageHandler,
+//     processError: errorHandler
+// })
+
+module.exports = async function (context, req) {
+    const { messageBody: body, to } = req.body;
     client.messages.create({
         body,
         messagingServiceSid,
         to
     })
-};
-const errorHandler = async (error) => {
-    console.log(error);
-};
-receiver.subscribe({
-    processMessage: messageHandler,
-    processError: errorHandler
-})
 
-module.exports = async function (context, req) {
-    context.log('HTTP trigger for twilio');
     const responseMessage = 'success';
 
     context.res = {

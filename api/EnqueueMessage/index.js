@@ -8,6 +8,7 @@ module.exports = async function (context, req) {
     const dateString = req.body.dateString;
     const enqueueTime = new Date(dateString);
     enqueueTime.setMinutes(enqueueTime.getMinutes() - 15); // send 15 mins before
+    enqueueTime.setHours(enqueueTime.getHours() - 8); // account for GMT +8, hacky way
     // follows this interface https://docs.microsoft.com/en-us/javascript/api/@azure/service-bus/servicebusmessage?view=azure-node-latest
     const sampleMessage = {
         body: {
