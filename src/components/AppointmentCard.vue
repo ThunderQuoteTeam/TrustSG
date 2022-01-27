@@ -88,7 +88,7 @@
                 date: '',
                 duration: '',
                 agenda: '',
-                isActionable: false,
+                isActionable: true,
                 isPostponed: false
             })
             onMounted(async () => {
