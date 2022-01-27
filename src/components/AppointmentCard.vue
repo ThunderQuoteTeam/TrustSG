@@ -2,10 +2,11 @@
     <q-card class="appointment-card text-white"
             v-bind="$attrs"
             :key="renderKey"
-            :class="appointmentData.isActionable ? 'bg-primary' : 'bg-secondary'">
+            :class="appointmentData.isActionable ? 'bg-primary' : appointmentData.isPostponed ? 'bg-warning' : 'bg-secondary'">
         <q-card-section>
             <div class="text-h6">Your Appointment</div>
             <p v-if="!appointmentData.isActionable" class="q-mb-none">This appointment has already been accepted</p>
+            <p v-else-if="appointmentData.isPostponed" class="q-mb-none">This appointment was postponed</p>
         </q-card-section>
         <q-card-section>
             <div class="q-mb-md flex no-wrap">
@@ -87,7 +88,8 @@
                 date: '',
                 duration: '',
                 agenda: '',
-                isActionable: false
+                isActionable: false,
+                isPostponed: false
             })
             onMounted(async () => {
                 assignData();
@@ -99,6 +101,7 @@
                 appointmentData.value.duration = `${el.duration} mins`;
                 appointmentData.value.agenda = el.agenda;
                 appointmentData.value.isActionable = el.status === 'pending';
+                appointmentData.value.isPostponed = !!el.postponedDate;
             }
 
             const postponeFormVisible = ref(false);
@@ -109,9 +112,16 @@
                 postponeFormVisible.value = false;
             }
             const postponedDateString = ref(null);
-            const sendPostponeRequest = () => {
+            const sendPostponeRequest = async() => {
                 console.log(postponedDateString.value, props.appointmentId);
+                const updatedAppointment = {
+                    id: props.appointmentId,
+                    postponedDate: postponedDateString.value
+                }
+                await databaseStore.updateAppointment(updatedAppointment);
                 hidePostponeForm();
+                await assignData();
+                renderKey.value += 1;
             }
 
             const verificationCode = ref('');
