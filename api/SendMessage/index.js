@@ -26,8 +26,13 @@ const client = require('twilio')(accountSid, authToken);
 // })
 
 module.exports = async function (context, req) {
-    const { appointmentId, messageBody, to, dateString } = req.body;
-    const body = `A public officer from MOH wants to call you at ${dateString}. Please visit this link ${process.env.CLIENT_APP_URL}/${appointmentId} to obtain a verification code. The public officer will recite this code at the start of your call. The agenda of the call is: ${messageBody}`;
+    const { appointmentId, messageBody, to, dateString, strictCustomBody } = req.body;
+    let body;
+    if (strictCustomBody) {
+        body = strictCustomBody;
+    } else {
+        body = `A public officer from MOH wants to call you at ${dateString}. Please visit this link ${process.env.CLIENT_APP_URL}/${appointmentId} to obtain a verification code. The public officer will recite this code at the start of your call. The agenda of the call is: ${messageBody}`;
+    }
     client.messages.create({
         body,
         messagingServiceSid,

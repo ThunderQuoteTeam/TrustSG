@@ -94,6 +94,7 @@
                     console.log({err});
                 }
                 console.log({resp});
+                resp.data.reverse();
                 rawAppointments.value = resp.data;
             }
             const formattedAppointments = computed(() => {
@@ -140,7 +141,10 @@
                 if (!(row.status === 'completed' || row.status === 'postponed')) {
                     actions.push({
                         label: 'Mark As Done',
-                        callback: () => markAppointmentCompleted(row.id)
+                        callback: async () => {
+                            await markAppointmentCompleted(row.id);
+                            getAllAppointments();
+                        }
                     })
                 }
                 return actions;

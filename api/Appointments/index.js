@@ -35,18 +35,24 @@ module.exports = async function (context, req) {
         case "PATCH":
             const updatedBody = req.body.updatedBody;
             const id = updatedBody.id;
-            const patchBody = [];
+            // first get the currentItem, to preserve its properties
+            const query = {
+                query: "SELECT * from c WHERE c.id = @id",
+                parameters: [
+                    {name: "@id", value: id}
+                ]
+            }
+            const { resources } = await container.items
+            .query(query)
+            .fetchAll();
+            const item = resources[0];
             // see microsoft's github repo for more details
             for (const [key, newVal] of Object.entries(updatedBody)) {
                 if (key !== 'id') {
-                    patchBody.push({
-                        path: key,
-                        value: newVal,
-                        op: "replace"
-                    })
+                    item[key] = newVal
                 }
             }
-            const { resource: updatedItem } = await container.item(id).patch(patchBody);
+            const { resource: updatedItem } = await container.item(id).replace(item)
             result = updatedItem;
             break;
         default:

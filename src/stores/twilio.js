@@ -8,7 +8,6 @@ const useTwilioStore = defineStore('twilio', {
     },
     actions: {
         async sendAppointmentMessage(appointmentId, to, body, dateString) {
-            console.log('twilio store', {appointmentId});
             return this.axiosInstance.post('/sendmessage', {
                 appointmentId,
                 messageBody: body,
