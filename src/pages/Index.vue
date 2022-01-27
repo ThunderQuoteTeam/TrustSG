@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-around">
+  <q-page class="flex flex-center">
     <AppointmentForm/>
   </q-page>
 </template>

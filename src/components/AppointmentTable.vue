@@ -128,18 +128,19 @@
                 console.log('making a call to:', {callerId});
             }
             const generateActions = (row) => {
+                const actions = [];
                 // const actions = [
                 //     {
                 //         label: 'View Details',
                 //         callback: () => viewAppointmentDetails(row.id)
                 //     }
                 // ];
-                if (row.status === 'accepted') {
-                    actions.push({
-                        label: 'Call Now',
-                        callback: () => connectCall(row.callerId)
-                    })
-                }
+                // if (row.status === 'accepted') {
+                //     actions.push({
+                //         label: 'Call Now',
+                //         callback: () => connectCall(row.callerId)
+                //     })
+                // }
                 if (!(row.status === 'completed' || row.status === 'postponed')) {
                     actions.push({
                         label: 'Mark As Done',
