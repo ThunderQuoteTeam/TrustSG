@@ -2,7 +2,7 @@
     <q-card class="appointment-card text-white"
             v-bind="$attrs"
             :key="renderKey"
-            :class="appointmentData.isActionable ? 'bg-primary' : appointmentData.isPostponed ? 'bg-warning' : 'bg-secondary'">
+            :class="appointmentData.isActionable ? 'bg-primary' : appointmentData.isPostponed ? 'bg-secondary' : 'bg-warning'">
         <q-card-section>
             <div class="text-h6">Your Appointment</div>
             <p v-if="appointmentData.isPostponed" class="q-mb-none">This appointment was postponed</p>

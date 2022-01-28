@@ -12,7 +12,7 @@
         />
 
         <!-- <q-toolbar-title>TrustSG</q-toolbar-title> -->
-        <q-btn flat label="TrustSG" @click="returnHome"/>
+        <q-btn flat label="TrustSG" @click="returnHome" icon-right="img:digital-tq-compass.png" size="lg"/>
         <q-space/>
         <q-btn label="Login" @click="login" color="secondary"/>
       </q-toolbar>
